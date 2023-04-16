@@ -1,4 +1,4 @@
-package org.koreait.exam01.boards;
+package org.koreait.exam01.board;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

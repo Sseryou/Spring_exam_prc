@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<table border="1">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>subject</th>
+        <th>content</th>
+        <th>regDt</th>
+        <th>modDt</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr  th:object="${board}">
+        <td th:text="*{id}"> </td>
+        <td th:text="*{subject}"></td>
+        <td th:text="*{content}"></td>
+        <td th:text="*{#temporals.format(regDt, 'yyyy.MM.dd HH:mm')}"></td>
+        <td th:text="*{modDt}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

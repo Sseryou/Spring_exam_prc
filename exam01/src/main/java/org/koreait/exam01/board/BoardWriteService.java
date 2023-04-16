@@ -1,6 +1,5 @@
 package org.koreait.exam01.board;
 
-import org.koreait.exam01.boards.BoardForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +11,7 @@ public class BoardWriteService {
 
     @Autowired
     public void setBoardDao(BoardDao boardDao){
+
         this.boardDao = boardDao;
     }
 

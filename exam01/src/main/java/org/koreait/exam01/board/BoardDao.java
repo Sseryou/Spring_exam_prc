@@ -72,41 +72,56 @@ public class BoardDao {
     //ResultSet은 SELECT문의 결과를 저장하게 된다.
     //sql문으로 적절하지 않은 데이터가 들어갈 경우 sql예외발생, 예외전가를 시켜야 한다.
     //i는 인덱스 번호이다.
-    private Board boardMapper(ResultSet rs , int i) throws SQLException {
-            //board에서 정보를 받아와서 테이블을 연동하기 위해 board 객체 생성
-            Board board = new Board();
-            //각 컬럼의 정보를 받아와서, set 형태로 board 객체에 넣어준다.
-            board.setId(rs.getLong("ID"));
-            board.setSubject(rs.getString("SUBJECT"));
-            board.setContent(rs.getString("CONTENT"));
-            //컬럼에서 받아온 시간(String)을 시간 형식으로 바꿔줄 필요가 있다. .toLocalDateTime()
-            board.setRegDt(rs.getTimestamp("REGDT").toLocalDateTime());
 
-            //수정 시간은 생성 시간 없이 생성 될 수 없어야 한다.
-            //생성도 안했는데 수정을 할 수는 없지 않은가?
-            //우선은 객체 생성만 해둔다.
-            Timestamp modDt = rs.getTimestamp("MODDT");
-            //생성 이후에 수정 시 수정한 시간을 받아오도록 구성
-            if(modDt != null){
-                //이렇게 하면 이 메서드는 최초 실행시에는 modDt가 null이기 때문에
-                //이 구문은 실행되지 않는다.
-                //하지만 같은 정보를 불러왔을 경우, rs.getTimestamp로 인해 값이 들어가 있으므로,
-                //modDt가 생성 될 것이다.
-                board.setModDt(modDt.toLocalDateTime());
-            }
-            //한번 거치고 나서 완성된 객체 반환.
-            return board;
-    }
 
     public List<Board> gets(){
 
         String sql = "SELECT * FROM BOARD";
         List<Board> boards = jdbcTemplate.query(sql, this::boardMapper);
-
         return boards;
 
+    }
+
+    private Board boardMapper(ResultSet rs , int i) throws SQLException {
+        //board에서 정보를 받아와서 테이블을 연동하기 위해 board 객체 생성
+        Board board = new Board();
+        //각 컬럼의 정보를 받아와서, set 형태로 board 객체에 넣어준다.
+        board.setId(rs.getLong("ID"));
+        board.setSubject(rs.getString("SUBJECT"));
+        board.setContent(rs.getString("CONTENT"));
+        //컬럼에서 받아온 시간(String)을 시간 형식으로 바꿔줄 필요가 있다. .toLocalDateTime()
+        board.setRegDt(rs.getTimestamp("REGDT").toLocalDateTime());
+
+        //수정 시간은 생성 시간 없이 생성 될 수 없어야 한다.
+        //생성도 안했는데 수정을 할 수는 없지 않은가?
+        //우선은 객체 생성만 해둔다.
+        Timestamp modDt = rs.getTimestamp("MODDT");
+        //생성 이후에 수정 시 수정한 시간을 받아오도록 구성
+        if(modDt != null){
+            //이렇게 하면 이 메서드는 최초 실행시에는 modDt가 null이기 때문에
+            //이 구문은 실행되지 않는다.
+            //하지만 같은 정보를 불러왔을 경우, rs.getTimestamp로 인해 값이 들어가 있으므로,
+            //modDt가 생성 될 것이다.
+            board.setModDt(modDt.toLocalDateTime());
+        }
+        //한번 거치고 나서 완성된 객체 반환.
+        return board;
+    }
+
+    public Board delete(Long id){
+        try{
+            String sql = "DELETE * FROM BOARD WHERE ID = ?";
+            Board board = jdbcTemplate.queryForObject(sql, this::boardMapper, id);
+            return board;
+
+        } catch (Exception e){
+            e.printStackTrace();
+            return null; //임시. 오류 페이지가 들어갈 예정
+        }
 
     }
+
+
 
 
 
